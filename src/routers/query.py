@@ -180,7 +180,7 @@ def retrieve(text:str,type:str,k:int):
 
     # Trasforma la risposta per Pydantic
     bindings = results["results"]["bindings"]
-    formatted_results = [{"sogg": item["sogg"]} for item in bindings]
+    formatted_results = [{"sogg": item["sogg"], "s": item["p"]} for item in bindings]
 
     return {"results": formatted_results}
 

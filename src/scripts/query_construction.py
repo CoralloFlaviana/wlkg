@@ -154,7 +154,7 @@ def finder_tmp(o:str,prop:str=None):
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?sogg WHERE {{
+      SELECT DISTINCT ?sogg ?p WHERE {{
       BIND ({o} as ?o) .
         {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
         ?s rdfs:label ?sogg.

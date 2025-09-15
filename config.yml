@@ -1,6 +1,6 @@
 app:
   name: wlkg
-  endpoint: https://kgccc.di.unito.it/sparql/wl-kg
+  endpoint: https://fuseki.hfpo-kfpo.di.unito.it/wlkg/query
   namespace: 
     left:
       entitytype1: 
@@ -20,10 +20,10 @@ app:
         label: wasPublishedWhen
         rel: urw:wasPublishedWhen
   prefix: 
-    urw: <https://purl.archive.org/urwriters#> 
+    urw: <http://purl.archive.org/urwriters#> 
   prefixes: |
-    PREFIX urw: <https://purl.archive.org/urwriters#> 
+    PREFIX urw: <http://purl.archive.org/urwriters#> 
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX prov: <http://www.w3.org/ns/prov#>
-    PREFIX urb: <https://purl.archive.org/urbooks#>
+    PREFIX urb: <http://purl.archive.org/urbooks#>
   template: "{'QuestionFocus': '', 'entities': {'work': [],'person': [], 'subject':[], 'publisher':[]}}"
