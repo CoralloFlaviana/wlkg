@@ -18,12 +18,13 @@ def searchExactly(label: str, urw_prefix:str, configEntity:str=None ) :
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?name ?titolo WHERE {{
-        ?author ?rel ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
+      SELECT DISTINCT ?name ?s WHERE {{
+      ?s a {configEntity}; 
         
-        FILTER((?titolo = "{label}") || (?name = "{label}"))
+      ''' {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
+        ?s rdfs:label ?name'''
+        
+        FILTER((?name = "{label}"))
       }}
       """
     else:
@@ -49,14 +50,15 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?name ?titolo WHERE {{
-        ?author ?rel ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
+      SELECT DISTINCT ?name ?s WHERE {{
+        {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
+        ?s rdfs:label ?name
         
-          FILTER(regex(?titolo, "{label}", "i") || regex(?name, "{label}", "i"))
+          FILTER(regex(?name, "{label}", "i"))
 
       }}
+
+      LIMIT 50
       """
     else:
       query = f"""
@@ -69,6 +71,8 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
         
         FILTER(regex(?titolo, "{label}", "i") || regex(?name, "{label}", "i"))
       }}
+
+       LIMIT 50
       """
       print(query)
     return query
@@ -80,7 +84,7 @@ def finder(urw_prefix:str, configEntity:str, o:str):
     query = f"""
     {config.prefixes}
     
-    SELECT DISTINCT ?s, ?sogg WHERE {{
+    SELECT DISTINCT ?s ?sogg WHERE {{
       ?s {configEntity} {o}.
       ?s rdfs:label ?sogg.
       
@@ -95,7 +99,7 @@ def searchTypeEntity(urw_prefix:str, entity_type:str) :
     query = f"""
     {config.prefixes}
 
-    SELECT DISTINCT ?s, ?name WHERE {{
+    SELECT DISTINCT ?s ?name WHERE {{
       ?s  rdf:type {entity_type}.
       ?s rdfs:label ?name.
     }}
@@ -109,15 +113,17 @@ def rel(urw_prefix:str, ris:str) :
     query = f"""
     {config.prefixes}
  
+    
     SELECT DISTINCT ?relazione ?rel WHERE {{
-     {{
-       {ris} ?rel ?o.  
-      ?rel rdfs:label ?relazione.
-      }}
-    UNION {{
-       ?o ?rel {ris}.
-      ?rel rdfs:label ?relazione. 
-      }}
+        {{
+            {ris} ?rel ?o.
+            OPTIONAL {{ ?rel rdfs:label ?relazione. }}
+        }}
+        UNION
+        {{
+            ?o ?rel {ris}.
+            OPTIONAL {{ ?rel rdfs:label ?relazione. }}
+        }}
     }}
 
     """
@@ -131,7 +137,7 @@ def explorationRel(urw_prefix:str, configEntity:str, o:str):
     query = f"""
     {config.prefixes}
     
-    SELECT DISTINCT ?s, ?sogg WHERE {{
+    SELECT DISTINCT ?s ?sogg WHERE {{
     {{
       ?s {configEntity} {o}.
       ?s rdfs:label ?sogg.

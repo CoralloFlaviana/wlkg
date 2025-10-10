@@ -10,7 +10,7 @@ class LiteralValue(BaseModel):
 
 class SearchResult(BaseModel):
     name: LiteralValue
-    titolo: LiteralValue
+    s: LiteralValue
 
 class SearchResponse(BaseModel):
     results: List[SearchResult]

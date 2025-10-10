@@ -53,25 +53,34 @@ def serch_exactly(label: str, numberEntity: int) -> SearchResponse:
     
 
 
+from typing import Optional
+
 @query.get("/search_regex", response_model=SearchResponse)
-def search_regex(label: str, numberEntity: int) -> SearchResponse:
+def search_regex(
+    label: str, 
+    numberEntity: Optional[int] = Query(None)
+) -> SearchResponse:
     sparql = SPARQLWrapper(SPARQL_ENDPOINT)
     
-    entity_key = f"entità{numberEntity}"  # Nome chiave da cercare
+    configEntity = None
     
-    # Controllo se esiste l'entità richiesta
-    if entity_key not in config.namespace.right:
-        raise HTTPException(status_code=400, detail=f"Entity {entity_key} not found in config")
-
-    configEntity = config.namespace.right[entity_key].rel  
+    if numberEntity is not None:
+        entity_key = f"entità{numberEntity}"  # Nome chiave da cercare
+        
+        # Controllo se esiste l'entità richiesta
+        if entity_key not in config.namespace.right:
+            raise HTTPException(status_code=400, detail=f"Entity {entity_key} not found in config")
+        
+        configEntity = config.namespace.right[entity_key].rel
 
     # Controllo se il prefisso urw è disponibile
-    urw_prefix = config.prefix["urw"]
+    urw_prefix = config.prefix.get("urw")
     if not urw_prefix:
         raise HTTPException(status_code=500, detail="Prefix is missing in configuration")
     
-    query=searchRegex(label, urw_prefix, configEntity)
-
+    # Passi configEntity solo se esiste
+    query = searchRegex(label, urw_prefix, configEntity)
+    
     try:
         sparql.setQuery(query)
         sparql.setReturnFormat(JSON)
@@ -80,6 +89,7 @@ def search_regex(label: str, numberEntity: int) -> SearchResponse:
         raise HTTPException(status_code=500, detail=f"SPARQL Query Error: {str(e)}")
 
     return {"results": results["results"]["bindings"]}
+
 
 
     
@@ -169,6 +179,7 @@ def retrieve(text:str,type:str,k:int):
     
         my_res.extend(linked)
 
+    print(my_res)
     query = finder_tmp(f"urw:{my_res[0][0]['entity']}")
     
     try:
@@ -207,7 +218,15 @@ def relTemp(ris: str) :
 
     # Trasforma la risposta per Pydantic
     bindings = results["results"]["bindings"]
-    formatted_results = [{"relazione": item["relazione"], "rel": item["rel"]} for item in bindings]
+    formatted_results = [
+    {
+        "relazione": item.get("relazione"),  # se manca, None
+        "rel": item["rel"]
+    }
+    for item in bindings
+]
+
+    print(formatted_results)
 
     return {"results": formatted_results}
 
@@ -220,6 +239,9 @@ def entityFind(rel: str, o: str) -> FindResult:
     urw_prefix = config.prefix["urw"]
     if not urw_prefix:
         raise HTTPException(status_code=500, detail="Prefix is missing in configuration")
+    
+    rel="<"+rel+">"
+    o="<"+o+">"
 
     query=explorationRel(urw_prefix, rel, o)
 
@@ -234,4 +256,5 @@ def entityFind(rel: str, o: str) -> FindResult:
     bindings = results["results"]["bindings"]
     formatted_results = [{"s": item["s"], "sogg": item["sogg"]} for item in bindings]
 
+    print(formatted_results)
     return {"results": formatted_results}

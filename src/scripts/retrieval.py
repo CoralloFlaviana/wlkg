@@ -15,7 +15,8 @@ class Retriever:
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.bfloat16, trust_remote_code=True).to(self.device).eval()
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
         self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.df = pd.read_parquet('wlkg/data/entities_def.parquet')
+        #self.df = pd.read_parquet('wlkg/data/entities_def.parquet')
+        self.df = pd.read_parquet('data/entities_def.parquet')
 
 
     def extract_knowledge(self, template, text, max_length=10_000, max_new_tokens=4_000):
@@ -35,13 +36,13 @@ class Retriever:
     
     def link(self, entity, type,k=3):
         if type == 'work':
-            index = faiss.read_index('wlkg/data/faiss_db/text/work.faiss')
+            index = faiss.read_index('data/faiss_db/text/work.faiss')
         elif type == 'person':
-            index = faiss.read_index('wlkg/data/faiss_db/text/person.faiss')
+            index = faiss.read_index('data/faiss_db/text/person.faiss')
         elif type == 'subject':
-            index = faiss.read_index('wlkg/data/faiss_db/text/subject.faiss')
+            index = faiss.read_index('data/faiss_db/text/subject.faiss')
         elif type == 'publisher':
-            index = faiss.read_index('wlkg/data/faiss_db/text/publisher.faiss')
+            index = faiss.read_index('data/faiss_db/text/publisher.faiss')
         
         query_vector = self.sentence_model.encode([entity], return_tensors=True)
         distances, indices = index.search(query_vector, k)

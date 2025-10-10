@@ -20,7 +20,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copia il codice
-COPY . .
+COPY src ./src
+COPY data ./src/wlkg/data
+COPY config.yml ./config.yml
+
+
 
 # Crea utente non-root
 RUN adduser --disabled-password --gecos '' appuser && \
