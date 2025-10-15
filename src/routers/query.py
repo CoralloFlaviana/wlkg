@@ -29,10 +29,10 @@ def serch_exactly(label: str, numberEntity: int) -> SearchResponse:
     entity_key = f"entità{numberEntity}"  # Nome chiave da cercare
     
     # Controllo se esiste l'entità richiesta
-    if entity_key not in config.namespace.right:
+    if entity_key not in config.namespace.entities_type:
         raise HTTPException(status_code=400, detail=f"Entity {entity_key} not found in config")
 
-    configEntity = config.namespace.right[entity_key].rel  
+    configEntity = config.namespace.entities_type[entity_key].rel  
 
     # Controllo se il prefisso urw è disponibile
     urw_prefix = config.prefix["urw"]
@@ -68,10 +68,10 @@ def search_regex(
         entity_key = f"entità{numberEntity}"  # Nome chiave da cercare
         
         # Controllo se esiste l'entità richiesta
-        if entity_key not in config.namespace.right:
+        if entity_key not in config.namespace.entities_type:
             raise HTTPException(status_code=400, detail=f"Entity {entity_key} not found in config")
         
-        configEntity = config.namespace.right[entity_key].rel
+        configEntity = config.namespace.entities_type[entity_key].rel
 
     # Controllo se il prefisso urw è disponibile
     urw_prefix = config.prefix.get("urw")
@@ -107,10 +107,10 @@ def find(rel: str, o: str) -> FindResult:
     entity_key = f"entità{rel}"  # Nome chiave da cercare
     
     # Controllo se esiste l'entità richiesta
-    if entity_key not in config.namespace.right:
+    if entity_key not in config.namespace.entities_type:
         raise HTTPException(status_code=400, detail=f"Entity {entity_key} not found in config")
 
-    configEntity = config.namespace.right[entity_key].rel  
+    configEntity = config.namespace.entities_type[entity_key].rel  
 
     query=finder(urw_prefix, configEntity, o)
 
@@ -138,14 +138,14 @@ def search_type(entitytype: str) -> SearchResultURI:
         raise HTTPException(status_code=500, detail="Prefix is missing in configuration")
 
     
-    entity_key = f"entitytype{entitytype}"  # Nome chiave da cercare
+    entity_key = f"entità{entitytype}"  # Nome chiave da cercare
     
     # Controllo se esiste l'entità richiesta
-    if entity_key not in config.namespace.left:
+    if entity_key not in config.namespace.entities_type:
         raise HTTPException(status_code=400, detail=f"Entity {entity_key} not found in config")
 
-    prefix_type = config.namespace.left[entity_key].prefix
-    entity_type = config.namespace.left[entity_key].type  
+    prefix_type = config.namespace.entities_type[entity_key].prefix
+    entity_type = config.namespace.entities_type[entity_key].type  
 
     query=searchTypeEntity(urw_prefix, entity_type)
     

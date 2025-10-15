@@ -2,23 +2,27 @@ app:
   name: wlkg
   endpoint: https://fuseki.hfpo-kfpo.di.unito.it/wlkg/query
   namespace: 
-    left:
-      entitytype1: 
-        type: prov:Person 
-        prefix: "PREFIX prov: <http://www.w3.org/ns/prov#>"
-    right:
+    entities_type: 
       entità1:
-        label: book
-        rel: urw:wasAttributedTo
+        label: "person"
+        type: "prov:Person" 
+        color: "#FF5733"
       entità2:
-        label: publisher
-        rel: urw:wasPublishedBy
+        label: "publisher"
+        type: "urb:Publisher"
+        color: "#33C1FF"
       entità3:
-        label: language
-        rel: urw:publishingLanguage
+        label: "book"
+        type: "frbr:Expression"
+        color: "#75FF33"
       entità4:
-        label: wasPublishedWhen
-        rel: urw:wasPublishedWhen
+        label: "topic"
+        type: "frbr:Subject"
+        color: "#FF33A8"
+      entità5:
+        label: "country"
+        type: "rdfs:Class"
+        color: "#F3FF33"
   prefix: 
     urw: <http://purl.archive.org/urwriters#> 
   prefixes: |

@@ -39,5 +39,19 @@ async def root():
 
 
 
+@app.get("/info_entities")
+async def root():
+    entities = {
+        key: {
+            "color": value.color,
+            "label": value.label,
+            "type": value.type
+        }
+        for key, value in config.namespace.entities_type.items()
+    }
+
+    return {"entities": entities}
+
+
 if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=8000)

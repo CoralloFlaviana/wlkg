@@ -47,17 +47,13 @@ class SearchResultURI(BaseModel):
     results: List[SearchResultItem]
 
 # Modelli Pydantic per il file YML
-class Entity(BaseModel):
+class Entity(BaseModel): 
     label: str
-    rel: str
-
-class EntityType(BaseModel):
     type: str  
-    prefix: str
+    color: str
 
-class Namespace(BaseModel):
-    left: Dict[str, EntityType]
-    right: Dict[str, Entity]
+class Namespace(BaseModel): 
+    entities_type: Dict[str, Entity]
 
 class Config(BaseSettings):
     name: str
