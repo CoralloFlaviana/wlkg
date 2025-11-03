@@ -11,6 +11,7 @@ class LiteralValue(BaseModel):
 class SearchResult(BaseModel):
     name: LiteralValue
     s: LiteralValue
+    type: str
 
 class SearchResponse(BaseModel):
     results: List[SearchResult]
@@ -19,6 +20,7 @@ class SearchResponse(BaseModel):
 class FindResultItem(BaseModel):
     s: str
     sogg: str
+    type: str
 
     @field_validator("s", "sogg", mode="before")
     @classmethod

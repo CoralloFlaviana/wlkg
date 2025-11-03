@@ -50,10 +50,9 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?name ?s WHERE {{
+      SELECT DISTINCT ?name ?s  WHERE {{
         {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
-        ?s rdfs:label ?name
-        
+        ?s rdfs:label ?name.
           FILTER(regex(?name, "{label}", "i"))
 
       }}
@@ -64,12 +63,11 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?name ?titolo WHERE {{
-        ?author {configEntity} ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
+      SELECT DISTINCT ?name ?s WHERE {{
+        ?s a {configEntity}.
+        ?s rdfs:label ?name.
         
-        FILTER(regex(?titolo, "{label}", "i") || regex(?name, "{label}", "i"))
+        FILTER(regex(?name, "{label}", "i"))
       }}
 
        LIMIT 50
@@ -146,8 +144,10 @@ def explorationRel(urw_prefix:str, configEntity:str, o:str):
       ?s rdfs:label ?sogg.
     }}
       
-      
+
     }}
+
+    limit 50
     """
     print(query)
     return query
@@ -180,3 +180,81 @@ def finder_tmp(o:str,prop:str=None):
       """
     print(query)
     return query
+
+#NOTE: return type of entity
+def typeEntity(entity:str) :
+
+ # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+
+    SELECT DISTINCT ?type WHERE {{
+      <{entity}>  rdf:type ?type.
+    }}
+
+    """
+    print(query)
+    return query
+
+#NOTE: 
+def getImage(entity:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+    
+    SELECT DISTINCT ?img WHERE {{
+      <{entity}> urw:image ?img.
+      
+    }}
+    """
+    print(query)
+    return query
+
+
+#NOTE: 
+def getUrlWikidata(entity:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+    
+    SELECT DISTINCT ?wikid WHERE {{
+      <{entity}> urw:wikidata ?wikid.
+      
+    }}
+    """
+    print(query)
+    return query
+
+#NOTE: 
+def getUrlGoodreads(entity:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+    
+    SELECT DISTINCT ?gdr WHERE {{
+      <{entity}> urw:goodreads ?gdr.
+      
+    }}
+    """
+    print(query)
+    return query
+
+
+#NOTE: 
+def getUrlOlid(entity:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+    
+    SELECT DISTINCT ?olid WHERE {{
+      <{entity}> urw:olid ?olid.
+      
+    }}
+    """
+    print(query)
+    return query
+
