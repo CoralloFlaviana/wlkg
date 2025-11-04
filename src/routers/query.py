@@ -275,6 +275,7 @@ def entityFind(rel: str, o: str) -> FindResult:
         try:
             if s_value["value"]:
                 entity_result = type_entity(s_value["value"])
+                print(entity_result)
                 if isinstance(entity_result, dict):
                     results_list = entity_result.get("results", [])
                     if results_list:
@@ -399,23 +400,28 @@ FUNZIONE UTILE:
     Altrimenti restituisce 'altro'.
 """
 def uri_to_label(uri: str) -> str:
-    
     if not uri or not isinstance(uri, str):
         return "altro"
 
-    uri = uri.strip("<>")  # rimuove eventuali < >
-
-    #Controlla se corrisponde a una delle entità nel config
+    uri = uri.strip("<>").lower()  # rimuove eventuali < >
+    if "#" in uri:
+        uri = uri.split("#", 1)[1]  # prende solo la parte dopo '#'
+    print(f"[uri_to_label] Processing URI: {uri}")
+    
     try:
-        entities_type = config.namespace.entities_type
+        entities_type = config.namespace.entities_type  # Dict[str, Entity]
         for ent_key, ent_data in entities_type.items():
-            ns_url = ent_data.get("url", "").strip("<>")
-            label = ent_data.get("label", "")
+            ns_url = getattr(ent_data, "label", "")
+            label = getattr(ent_data, "label", "")
+
+
             if ns_url and (uri == ns_url or uri.startswith(ns_url)):
-                return label  # restituisci la label associata (es. "person")
+                print(f"[uri_to_label] Matched URI '{uri}' to label '{label}' using namespace '{ns_url}'")
+                return label
+
     except Exception as e:
         print(f"[uri_to_label] Warning: unable to access config namespaces ({e})")
 
-    # Nessun match → ritorna 'altro'
     return "altro"
+
 
