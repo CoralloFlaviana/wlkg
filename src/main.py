@@ -45,7 +45,8 @@ async def root():
         key: {
             "color": value.color,
             "label": value.label,
-            "type": value.type
+            "type": value.type,
+            "info": value.info
         }
         for key, value in config.namespace.entities_type.items()
     }

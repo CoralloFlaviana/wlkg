@@ -1,6 +1,6 @@
 app:
   name: wlkg
-  endpoint: https://fuseki.hfpo-kfpo.di.unito.it/wlkg/query
+  endpoint: https://fuseki.hfpo-kfpo.di.unito.it/wlkg/query 
   namespace: 
     entities_type: 
       entità0:

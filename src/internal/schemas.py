@@ -53,6 +53,8 @@ class Entity(BaseModel):
     label: str
     type: str  
     color: str
+    url: str
+    info: List[str]
 
 class Namespace(BaseModel): 
     entities_type: Dict[str, Entity]

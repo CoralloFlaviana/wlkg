@@ -56,7 +56,7 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
           FILTER(regex(?name, "{label}", "i"))
 
       }}
-
+      GROUP BY ?s ?name
       LIMIT 50
       """
     else:
@@ -69,10 +69,10 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
         
         FILTER(regex(?name, "{label}", "i"))
       }}
-
+      GROUP BY ?s ?name
        LIMIT 50
       """
-      print(query)
+    print(query)
     return query
 
 
@@ -138,10 +138,10 @@ def explorationRel(urw_prefix:str, configEntity:str, o:str):
     SELECT DISTINCT ?s ?sogg WHERE {{
     {{
       ?s {configEntity} {o}.
-      ?s rdfs:label ?sogg.
+      OPTIONAL {{?s rdfs:label ?sogg.}}
     }}UNION{{
       {o} {configEntity} ?s.
-      ?s rdfs:label ?sogg.
+      OPTIONAL {{?s rdfs:label ?sogg.}}
     }}
       
 
@@ -212,22 +212,22 @@ def getImage(entity:str):
     return query
 
 
-#NOTE: 
-def getUrlWikidata(entity:str):
+#NOTE: LASCIARE
+def getUrldata(entity:str, rel:str):
 
     # Costruzione della query SPARQL con validazione
     query = f"""
     {config.prefixes}
     
-    SELECT DISTINCT ?wikid WHERE {{
-      <{entity}> urw:wikidata ?wikid.
+    SELECT DISTINCT ?id WHERE {{
+      <{entity}> {rel} ?id.
       
     }}
     """
     print(query)
     return query
 
-#NOTE: 
+#NOTE: CANCELLARE
 def getUrlGoodreads(entity:str):
 
     # Costruzione della query SPARQL con validazione
@@ -243,7 +243,7 @@ def getUrlGoodreads(entity:str):
     return query
 
 
-#NOTE: 
+#NOTE: CANCELLARE
 def getUrlOlid(entity:str):
 
     # Costruzione della query SPARQL con validazione
