@@ -8,7 +8,7 @@ from internal.config import config as config
 from scripts.retrieval import Retriever
 from scripts.query_construction import finder, searchExactly, searchRegex, searchTypeEntity, rel, explorationRel, finder_tmp, typeEntity, getImage, getUrlGoodreads, getUrlOlid, getUrldata
 
-retriever = Retriever()
+#retriever = Retriever()
 
 
 query = APIRouter(
@@ -164,7 +164,7 @@ def search_regex(
                 result_type = "altro"
             else: 
                 print({results["results"]["bindings"][0]["type"]["value"]})
-                type_value = results["results"]["bindings"][0]["type"]["value"]
+                type_value = results["results"]["bindings"][0]["type"]["value"] #todo: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DA CORREGGERE SOLO KFPO 
                 result_type = uri_to_label(type_value)
         
         formatted_results.append({
@@ -174,7 +174,7 @@ def search_regex(
 
     return {"results": formatted_results}
 
-
+"""
 @query.get("/graphrag")
 def retrieve(text:str,type:str,k:int):
     sparql = SPARQLWrapper(SPARQL_ENDPOINT)
@@ -205,7 +205,7 @@ def retrieve(text:str,type:str,k:int):
     formatted_results = [{"sogg": item["sogg"], "s": item["p"]} for item in bindings]
 
     return {"results": formatted_results}
-
+"""
 
 @query.get("/rel")
 def relTemp(ris: str) :
@@ -409,6 +409,8 @@ def uri_to_label(uri: str) -> str:
         for ent_key, ent_data in entities_type.items():
             ns_url = getattr(ent_data, "type", "")
             ns_url = ns_url.split(":", 1)[-1].lower()
+            ns_url = ns_url.strip("<>") #rimuove <> eventuali
+            uri = uri.split(":", 1)[-1].lower()  # Prende solo la parte dopo ':'  #todo: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DA CORREGGERE SOLO KFPO
             label = getattr(ent_data, "label", "")
             print(f"[uri_to_label] Checking against namespace '{ns_url}' with label '{label}'")
             

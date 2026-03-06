@@ -20,6 +20,15 @@ app = FastAPI(
 
 app.include_router(query_router)
 
+from fastapi.responses import FileResponse
+@app.get("/download")
+async def download_file():
+    file_path = "C:/Users/Flavi/wlkg/progetto finale/wlkg/"
+    return FileResponse(
+        path=file_path, 
+        filename="docs.pdf", 
+        media_type='application/octet-stream'
+    )
 
 @app.get("/")
 async def root():

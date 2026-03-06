@@ -22,7 +22,7 @@ def searchExactly(label: str, urw_prefix:str, configEntity:str=None ) :
       ?s a {configEntity}; 
         
       ''' {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
-        ?s rdfs:label ?name'''
+        ?s {config.search} ?name'''
         
         FILTER((?name = "{label}"))
       }}
@@ -33,8 +33,8 @@ def searchExactly(label: str, urw_prefix:str, configEntity:str=None ) :
       
       SELECT DISTINCT ?name ?titolo WHERE {{
         ?author {configEntity} ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
+        ?books {config.search} ?titolo.
+        ?author {config.search} ?name.
         
         FILTER((?titolo = "{label}") || (?name = "{label}"))
       }}
@@ -52,7 +52,7 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
       
       SELECT DISTINCT ?name ?s  WHERE {{
         {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
-        ?s rdfs:label ?name.
+        ?s {config.search} ?name.
           FILTER(regex(?name, "{label}", "i"))
 
       }}
@@ -65,7 +65,7 @@ def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
       
       SELECT DISTINCT ?name ?s WHERE {{
         ?s a {configEntity}.
-        ?s rdfs:label ?name.
+        ?s {config.search} ?name.
         
         FILTER(regex(?name, "{label}", "i"))
       }}
@@ -84,7 +84,7 @@ def finder(urw_prefix:str, configEntity:str, o:str):
     
     SELECT DISTINCT ?s ?sogg WHERE {{
       ?s {configEntity} {o}.
-      ?s rdfs:label ?sogg.
+      ?s {config.search} ?sogg.
       
     }}
     """
@@ -99,7 +99,7 @@ def searchTypeEntity(urw_prefix:str, entity_type:str) :
 
     SELECT DISTINCT ?s ?name WHERE {{
       ?s  rdf:type {entity_type}.
-      ?s rdfs:label ?name.
+      ?s {config.search} ?name.
     }}
 
     """
@@ -115,12 +115,12 @@ def rel(urw_prefix:str, ris:str) :
     SELECT DISTINCT ?relazione ?rel WHERE {{
         {{
             {ris} ?rel ?o.
-            OPTIONAL {{ ?rel rdfs:label ?relazione. }}
+            OPTIONAL {{ ?rel {config.search} ?relazione. }}
         }}
         UNION
         {{
             ?o ?rel {ris}.
-            OPTIONAL {{ ?rel rdfs:label ?relazione. }}
+            OPTIONAL {{ ?rel {config.search} ?relazione. }}
         }}
     }}
 
@@ -138,10 +138,10 @@ def explorationRel(urw_prefix:str, configEntity:str, o:str):
     SELECT DISTINCT ?s ?sogg WHERE {{
     {{
       ?s {configEntity} {o}.
-      OPTIONAL {{?s rdfs:label ?sogg.}}
+      OPTIONAL {{?s {config.search} ?sogg.}}
     }}UNION{{
       {o} {configEntity} ?s.
-      OPTIONAL {{?s rdfs:label ?sogg.}}
+      OPTIONAL {{?s {config.search} ?sogg.}}
     }}
       
 
@@ -163,7 +163,7 @@ def finder_tmp(o:str,prop:str=None):
       SELECT DISTINCT ?sogg ?p WHERE {{
       BIND ({o} as ?o) .
         {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
-        ?s rdfs:label ?sogg.
+        ?s {config.search} ?sogg.
         
       }}
       """
@@ -174,7 +174,7 @@ def finder_tmp(o:str,prop:str=None):
       SELECT DISTINCT ?sogg ?p WHERE {{
       BIND ({o} as ?o) .
         {{ ?s {prop} ?o}} UNION {{ ?o {prop} ?s }} .
-        ?s rdfs:label ?sogg.
+        ?s {config.search} ?sogg.
         
       }}
       """
