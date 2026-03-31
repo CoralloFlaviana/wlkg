@@ -1,0 +1,51 @@
+id,input,prediction
+1-7,alps has topic Reinhold Messner,Reinhold Messner is a topic of the Alps.
+1-18,alps has topic Melissa Hill,Melissa Hill is a topic of the Alps.
+1-20,alps has topic Mont Blanc aux sept vallées,Mont Blanc aux sept vallées is a topic of the Alps.
+1-26,"alps has topic Mythen der Alpen. Von Saligen, Weissen Frauen und Heiligen Bergen.","Mythen der Alpen is a topic of the Alps and it includes Von Saligen, Weissen Frauen und Heiligen Bergen."
+1-27,alps has topic The Summer Villa,The Summer Villa is a topic of the Alps.
+1-38,alps has topic Alps and Sanctuaries of Piedmont and the Canton Ticino,The Alps and Sanctuaries of Piedmont and the Canton Ticino is a topic of the Alps.
+1-39,alps has topic Leggende delle Alpi,The topic of Alps is Leggende delle Alpi.
+5-0,transylvania has topic Dervla Murphy,Dervla Murphy is a topic of Transylvania.
+6-10,morocco has topic Abdallah Laroui,One of the topics in Morocco is Abdallah Laroui.
+6-35,morocco has topic Morocco; Volume II,Morocco is a topic of Volume II.
+8-4,provence has topic J. Robert Janes,J. Robert Janes is a topic of Provence.
+8-5,provence has topic Louise Dean,Louise Dean is a topic of Provence.
+8-7,provence has topic Raymond Jean,Raymond Jean is a topic of Provence.
+8-13,provence has topic The idea of love,The topic of Provence is The idea of love.
+8-18,provence has topic A troubadour's testament,A troubadour's testament is a topic of Provence.
+8-22,provence has topic Lian lian shan cheng,Lian lian shan cheng is a topic of Provence.
+8-24,provence has topic fontaine obscure,Fontaine is an obscure topic of Provence.
+9-11,French publishing language Felwine Sarr,The French publishing language is Felwine Sarr.
+9-21,French publishing language Cory Doctorow,Cory Doctorow is a writer of French publishing.
+9-23,French publishing language Rosa Montero,French is one of the languages used by Rosa Montero.
+9-33,French publishing language Elizabeth Goudge,The French language is used in publishing Elizabeth Goudge.
+9-39,French publishing language Maxine Trottier,Maxine Trottier is a French publisher.
+10-8,Romanian publishing language Marin Sorescu,Marin Sorescu is a Romanian publishing language.
+10-12,Romanian publishing language P. L. Travers,P.L. Travers writes in Romanian.
+10-18,Romanian publishing language Panait Istrati,The Romanian publishing language is Panait Istrati.
+11-10,Romanian publishing language Dumitru Popescu,Dumitru Popescu is a Romanian publisher.
+11-14,Romanian publishing language Miodrag Bulatović,Miodrag Bulatovic writes in Romanian.
+11-16,Romanian publishing language Ion Druță,Ion Druță is a Romanian publishing language.
+11-19,Romanian publishing language Nora Roberts,Nora Roberts writes in Romanian.
+13-13,Romanian publishing language Nora Iuga,Nora Iuga is a Romanian publishing language.
+13-16,Romanian publishing language Ion Druță,Ion Druţă is a Romanian publishing language.
+13-18,Romanian publishing language Panait Istrati,The Romanian publishing language is Panait Istrati.
+14-9,Casa de muñecas has publisher Players Press,Casa de muñecas is published by Players Press.
+14-20,Casa de muñecas has publisher Charles Scribner's Sons,The publisher of Casa de muñecas is Charles Scribner's Sons.
+14-23,Casa de muñecas has publisher NuVision Publications,NuVision Publications is the publisher of Casa de muñecas.
+14-38,Casa de muñecas has topic fiction / classics,The Casa de muñecas is about fiction and classics.
+14-40,Casa de muñecas has topic european - scandinavian,The topic of Casa de muñecas is European and Scandinavian.
+14-44,Casa de muñecas has topic fiction,The Casa de muñecas is a work of fiction.
+14-47,Casa de muñecas has topic classics,The Casa de Muñecas is about classics.
+14-49,Casa de muñecas has topic sociology,The topic of Casa de muñecas is sociology.
+14-52,Casa de muñecas has topic education / bilingual education,"The topic of Casa de muñecas is education, specifically bilingual education."
+14-62,Casa de muñecas publishing place Madrid,Casa de muñecas is published in Madrid.
+14-75,Casa de muñecas publishing place Nyu Yor ̣,The publishing place of Casa de muñecas is New York.
+14-76,Casa de muñecas publishing year 1996,Casa de muñecas was published in 1996.
+14-85,Casa de muñecas publishing year 2004,Casa de muñecas was published in 2004.
+14-95,Casa de muñecas publishing year 1908,Casa de muñecas was published in 1908.
+15-27,books has topic Noticias de libros,Books can be about the topic of Noticias de libros.
+15-31,books has topic This is Not the End of the Book,"The book ""This is Not the End of the Book"" is about books."
+15-37,books has topic The Land of Plenty,The Land of Plenty is a topic of books.
+15-38,books has topic Mark Twain's Burlesque Autobiography,The book Mark Twain's Burlesque Autobiography is about.

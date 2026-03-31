@@ -11,10 +11,10 @@ from internal.config import config as config
 SPARQL_ENDPOINT = config.endpoint
 
 
-def searchExactly(label: str, urw_prefix:str, configEntity:str=None ) :
+def searchExactly(label: str, property:str=None ) :
     
     # Costruzione della query SPARQL 
-    if configEntity is None:
+    if property is None:
       query = f"""
       {config.prefixes}
       
@@ -43,10 +43,10 @@ def searchExactly(label: str, urw_prefix:str, configEntity:str=None ) :
     return query
     
 
-def searchRegex(label: str, urw_prefix:str, configEntity:str=None ) :
+def searchRegex(label: str, property:str=None ) :
     
     # Costruzione della query SPARQL
-    if configEntity is None:
+    if property is None:
       query = f"""
       {config.prefixes}
       
