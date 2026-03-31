@@ -15,6 +15,7 @@ class Retriever:
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.bfloat16, trust_remote_code=True).to(self.device).eval()
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
         self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
+        #self.df = pd.read_parquet('wlkg/data/entities_def.parquet')
         self.df = pd.read_parquet('data/entities_def.parquet')
 
 

@@ -1,0 +1,96 @@
+app:
+  name: KFPO
+  endpoint: https://fuseki.hfpo-kfpo.di.unito.it/KFPO/query
+  namespace:
+    entities_type:
+      entità0:
+        label: "altro"
+        type: ""
+        color: "#808080"
+        url: ""
+        info:
+          - ""
+      entità1:
+        label: "Kassite Person"
+        type: "<kfpo:KassitePerson>"
+        color: "#FF5733"
+        url: "<https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Person>"
+        info:
+          - "dcterms:title"
+          - "<kfpo:hasNameInSourceAs>"
+          - "<kfpo:spellingOfTheName>"
+          - "<kfpo:gender>"
+          - "<kfpo:bio>"
+          - "<kfpo:dateRange>"
+          - "<kfpo:titleInCuneiform>"
+          - "<kfpo:sourcedFrom>"
+          - "ecrm:P40_observed_dimension"
+          - "dcterms:contributor"
+      entità2:
+        label: "Texual"
+        type: "<kfpo:KassiteSource>"
+        color: "#33C1FF"
+        url: ""
+        info:
+          - "dcterms:title"
+          - "<kfpo:hasCuneiformTextId>"
+          - "bibo:number"
+          - "<kfpo:collection>"
+          - "<kfpo:collectionNumber>"
+          - "dcterms:medium"
+          - "dcterms:format"
+          - "<kfpo:provenience>"
+          - "<kfpo:genre>"
+          - "<kfpo:king>"
+          - "<kfpo:sealing>"
+      entità3:
+        label: "Bibliographic"
+        type: "dcterms:BibliographicResource"
+        color: "#75FF33"
+        url: ""
+        info:
+          - "dcterms:title"
+          - "dcterms:creator"
+          - "dcterms:alternative"
+          - "bibo:volume"
+          - "dcterms:date"
+          - "bibo:pages"
+          - "bibo:shortTitle"
+          - "bibo:doi"
+          - "bibo:isbn"
+      entità4:
+        label: "Seal"
+        type: "<kfpo:Seal>"
+        color: "#57962ad"
+        url: ""
+        info:
+          - "dcterms:title"
+          - "dcterms:description"
+          - "<kfpo:owner>"
+          - "<kfpo:king>"
+  prefix:
+    urw: <https://github.com/johnBradley501/FPO/raw/master/KFPO>
+  prefixes: |
+    prefix frapo:  <http://purl.org/cerif/frapo/> 
+    prefix dul:    <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> 
+    prefix foaf:   <http://xmlns.com/foaf/0.1/> 
+    prefix fx:     <http://sparql.xyz/facade-x/ns/> 
+    prefix org:    <http://www.w3.org/ns/org#> 
+    prefix prov:   <http://www.w3.org/ns/prov#> 
+    prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> 
+    prefix schema: <http://schema.org/> 
+    prefix skos:   <http://www.w3.org/2004/02/skos/core#> 
+    prefix soa:    <https://semopenalex.org/ontology/> 
+    PREFIX dcterms: <http://purl.org/dc/terms/>
+    PREFIX bibo: <http://purl.org/ontology/bibo/>
+    Prefix ecrm: <http://erlangen-crm.org/200717/>
+    prefix curation: <https://omeka.org/s/vocabs/curation/>
+    prefix dctype: <http://purl.org/dc/dcmitype/>
+    prefix fpo: <https://github.com/johnBradley501/FPO/raw/master/fpo.owl>
+    prefix kfpo: <https://github.com/johnBradley501/FPO/raw/master/KFPO>
+  
+  
+
+  template: "{'QuestionFocus': '', 'entities': {'work': [],'person': [], 'subject':[], 'publisher':[]}}"
+  search: "dcterms:title"

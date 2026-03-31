@@ -20,6 +20,15 @@ app = FastAPI(
 
 app.include_router(query_router)
 
+from fastapi.responses import FileResponse
+@app.get("/download")
+async def download_file():
+    file_path = "C:/Users/Flavi/wlkg/progetto finale/wlkg/"
+    return FileResponse(
+        path=file_path, 
+        filename="docs.pdf", 
+        media_type='application/octet-stream'
+    )
 
 @app.get("/")
 async def root():
@@ -37,6 +46,26 @@ async def root():
         "prefix": config.prefix["urw"]
     }
 
+
+
+@app.get("/info_entities")
+async def root():
+    entities = {
+        key: {
+            "color": value.color,
+            "label": value.label,
+            "type": value.type,
+            "info": value.info
+        }
+        for key, value in config.namespace.entities_type.items()
+    }
+
+    return {"entities": entities}
+
+@app.get("/arrow")
+async def root():
+    print(f"Arrow value from config: {config.arrow}")
+    return {"arrow": config.arrow}
 
 
 if __name__ == "__main__":

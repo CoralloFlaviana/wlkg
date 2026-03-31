@@ -10,7 +10,8 @@ class LiteralValue(BaseModel):
 
 class SearchResult(BaseModel):
     name: LiteralValue
-    titolo: LiteralValue
+    s: LiteralValue
+    type: str
 
 class SearchResponse(BaseModel):
     results: List[SearchResult]
@@ -19,6 +20,7 @@ class SearchResponse(BaseModel):
 class FindResultItem(BaseModel):
     s: str
     sogg: str
+    type: str
 
     @field_validator("s", "sogg", mode="before")
     @classmethod
@@ -47,17 +49,15 @@ class SearchResultURI(BaseModel):
     results: List[SearchResultItem]
 
 # Modelli Pydantic per il file YML
-class Entity(BaseModel):
+class Entity(BaseModel): 
     label: str
-    rel: str
-
-class EntityType(BaseModel):
     type: str  
-    prefix: str
+    color: str
+    url: str
+    info: List[str]
 
-class Namespace(BaseModel):
-    left: Dict[str, EntityType]
-    right: Dict[str, Entity]
+class Namespace(BaseModel): 
+    entities_type: Dict[str, Entity]
 
 class Config(BaseSettings):
     name: str
@@ -66,7 +66,8 @@ class Config(BaseSettings):
     prefix: Dict[str, str]
     template: str
     prefixes: str
-    properties: List[Dict]
+    search: str
+    arrow: str
 
 
 # Models for Information Extraction

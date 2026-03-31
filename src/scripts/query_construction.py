@@ -18,12 +18,13 @@ def searchExactly(label: str, property:str=None ) :
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?name ?titolo WHERE {{
-        ?author ?rel ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
+      SELECT DISTINCT ?name ?s WHERE {{
+      ?s a {configEntity}; 
         
-        FILTER((?titolo = "{label}") || (?name = "{label}"))
+      ''' {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
+        ?s {config.search} ?name'''
+        
+        FILTER((?name = "{label}"))
       }}
       """
     else:
@@ -31,9 +32,9 @@ def searchExactly(label: str, property:str=None ) :
       {config.prefixes}
       
       SELECT DISTINCT ?name ?titolo WHERE {{
-        ?author {property} ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
+        ?author {configEntity} ?books.
+        ?books {config.search} ?titolo.
+        ?author {config.search} ?name.
         
         FILTER((?titolo = "{label}") || (?name = "{label}"))
       }}
@@ -49,28 +50,27 @@ def searchRegex(label: str, property:str=None ) :
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?name ?titolo WHERE {{
-        ?author ?rel ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
-        
-          FILTER(regex(?titolo, "{label}", "i") || regex(?name, "{label}", "i"))
+      SELECT DISTINCT ?name ?s  WHERE {{
+        {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
+        ?s {config.search} ?name.
+          FILTER(regex(?name, "{label}", "i"))
 
       }}
-      LIMIT 20
+      GROUP BY ?s ?name
+      LIMIT 50
       """
     else:
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?name ?titolo WHERE {{
-        ?author {property} ?books.
-        ?books rdfs:label ?titolo.
-        ?author rdfs:label ?name.
+      SELECT DISTINCT ?name ?s WHERE {{
+        ?s a {configEntity}.
+        ?s {config.search} ?name.
         
-        FILTER(regex(?titolo, "{label}", "i") || regex(?name, "{label}", "i"))
+        FILTER(regex(?name, "{label}", "i"))
       }}
-      LIMIT 20
+      GROUP BY ?s ?name
+       LIMIT 50
       """
     print(query)
     return query
@@ -82,9 +82,9 @@ def finder(urw_prefix:str, configEntity:str, o:str):
     query = f"""
     {config.prefixes}
     
-    SELECT DISTINCT ?s, ?sogg WHERE {{
+    SELECT DISTINCT ?s ?sogg WHERE {{
       ?s {configEntity} {o}.
-      ?s rdfs:label ?sogg.
+      ?s {config.search} ?sogg.
       
     }}
     """
@@ -97,9 +97,9 @@ def searchTypeEntity(urw_prefix:str, entity_type:str) :
     query = f"""
     {config.prefixes}
 
-    SELECT DISTINCT ?s, ?name WHERE {{
+    SELECT DISTINCT ?s ?name WHERE {{
       ?s  rdf:type {entity_type}.
-      ?s rdfs:label ?name.
+      ?s {config.search} ?name.
     }}
 
     """
@@ -108,45 +108,77 @@ def searchTypeEntity(urw_prefix:str, entity_type:str) :
 
 #NOTE: trova le relazioni tra due entità
 def rel(urw_prefix:str, ris:str) :
-    query = f"""
-    {config.prefixes}
- 
-    SELECT DISTINCT ?relazione ?rel WHERE {{
-     {{
-       {ris} ?rel ?o.  
-      ?rel rdfs:label ?relazione.
+    if (config.arrow == "no"):
+      query = f"""
+      {config.prefixes}
+  
+      
+      SELECT DISTINCT ?relazione ?rel WHERE {{
+          {{
+              {ris} ?rel ?o.
+              OPTIONAL {{ ?rel {config.search} ?relazione. }}
+          }}
+          UNION
+          {{
+              ?o ?rel {ris}.
+              OPTIONAL {{ ?rel {config.search} ?relazione. }}
+          }}
       }}
-    UNION {{
-       ?o ?rel {ris}.
-      ?rel rdfs:label ?relazione. 
-      }}
-    }}
 
-    """
+      """
+    else:
+      query = f"""
+      {config.prefixes}
+  
+      
+      SELECT DISTINCT ?relazione ?rel WHERE {{
+          {{
+              {ris} ?rel ?o.
+              OPTIONAL {{ ?rel {config.search} ?relazione. }}
+          }}
+          
+      }}
+
+      """
     print(query)
     return query
 
 # NOTE: LATO FRONTEND serve per trovare l'entità legata da una relazione a o (entità visitata al momento)
 def explorationRel(urw_prefix:str, configEntity:str, o:str):
-
+  if (config.arrow == "no"):
     # Costruzione della query SPARQL con validazione
     query = f"""
     {config.prefixes}
     
-    SELECT DISTINCT ?s, ?sogg WHERE {{
+    SELECT DISTINCT ?s ?sogg WHERE {{
     {{
       ?s {configEntity} {o}.
-      ?s rdfs:label ?sogg.
+      OPTIONAL {{?s {config.search} ?sogg.}}
     }}UNION{{
       {o} {configEntity} ?s.
-      ?s rdfs:label ?sogg.
+      OPTIONAL {{?s {config.search} ?sogg.}}
     }}
       
-      
+
     }}
+
+    limit 50
     """
-    print(query)
-    return query
+  else:
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+
+    SELECT DISTINCT ?s ?sogg WHERE {{
+    
+      {o} {configEntity} ?s.
+      OPTIONAL {{?s {config.search} ?sogg.}}
+    }}
+    limit 50
+    """
+    
+  print(query)
+  return query
 
 
 def finder_tmp(o:str,prop:str=None):
@@ -156,10 +188,10 @@ def finder_tmp(o:str,prop:str=None):
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?sogg WHERE {{
+      SELECT DISTINCT ?sogg ?p WHERE {{
       BIND ({o} as ?o) .
         {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
-        ?s rdfs:label ?sogg.
+        ?s {config.search} ?sogg.
         
       }}
       """
@@ -170,9 +202,87 @@ def finder_tmp(o:str,prop:str=None):
       SELECT DISTINCT ?sogg ?p WHERE {{
       BIND ({o} as ?o) .
         {{ ?s {prop} ?o}} UNION {{ ?o {prop} ?s }} .
-        ?s rdfs:label ?sogg.
+        ?s {config.search} ?sogg.
         
       }}
       """
     print(query)
     return query
+
+#NOTE: return type of entity
+def typeEntity(entity:str) :
+
+ # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+
+    SELECT DISTINCT ?type WHERE {{
+      <{entity}>  rdf:type ?type.
+    }}
+
+    """
+    print(query)
+    return query
+
+#NOTE: 
+def getImage(entity:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes} 
+    
+    SELECT DISTINCT ?img WHERE {{
+      <{entity}> foaf:image ?img.   
+      
+    }}
+    """
+    print(query)
+    return query
+
+
+#NOTE: LASCIARE
+def getUrldata(entity:str, rel:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+    
+    SELECT DISTINCT ?id WHERE {{
+      <{entity}> {rel} ?id.
+      
+    }}
+    """
+    print(query)
+    return query
+
+#NOTE: CANCELLARE
+def getUrlGoodreads(entity:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+    
+    SELECT DISTINCT ?gdr WHERE {{
+      <{entity}> urw:goodreads ?gdr.
+      
+    }}
+    """
+    print(query)
+    return query
+
+
+#NOTE: CANCELLARE
+def getUrlOlid(entity:str):
+
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+    
+    SELECT DISTINCT ?olid WHERE {{
+      <{entity}> urw:olid ?olid.
+      
+    }}
+    """
+    print(query)
+    return query
+

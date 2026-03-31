@@ -1,40 +1,79 @@
 app:
-  name: wlkg
-  endpoint: https://fuseki.hfpo-kfpo.di.unito.it/wlkg/query
+  name: esempio
+  endpoint: endpoint
   namespace: 
-    left:
-      entitytype1: 
-        type: prov:Person 
-        prefix: "PREFIX prov: <http://www.w3.org/ns/prov#>"
-    right:
+    entities_type: 
+      entità0:
+        label: "altro"
+        type: ""
+        color: "#808080"
+        url: ""
+        info: 
+            - ""
       entità1:
-        label: book
-        rel: urw:wasAttributedTo
+        label: "person"
+        type: "foaf:Person" 
+        color: "#FF5733"
+        url: "<http://xmlns.com/foaf/0.1/Person>"
+        info: 
+            - "dul:hasRole"
       entità2:
-        label: publisher
-        rel: urw:wasPublishedBy
+        label: "organization"
+        type: "org:Organization"
+        color: "#33C1FF"
+        url: "<http://www.w3.org/ns/org#Organization>"
+        info: 
+            - ""
       entità3:
-        label: language
-        rel: urw:publishingLanguage
+        label: "publicengagement"
+        type: "reo:PublicEngagement"
+        color: "#4BC6B9"
+        url: "<http://www.semanticweb.org/research-ontology/PublicEngagement>"
+        info: 
+            - "soa:hasTopic"
+            - "dcterms:hasScientificDirector"
       entità4:
-        label: wasPublishedWhen
-        rel: urw:wasPublishedWhen
+        label: "project"
+        type: "frapo:Project"
+        color: "#57962ad"
+        url: "<http://purl.org/cerif/frapo/Project>"
+        info: 
+            - "dcterms:hasScientificDirector"
+            - "frapo:hasStartDate"
+            - "frapo:hasEndDate"
+      entità5:
+        label: "work"
+        type: "soa:Work"
+        color: "#425eb4"
+        url: "<https://semopenalex.org/ontology/Work>"
+        info: 
+            - "soa:hasTopic"
+      entità6:
+        label: "keyword"
+        type: "soa:Keyword"
+        color: "#FFA533"
+        url: "<https://semopenalex.org/ontology/Keyword>"
+        info: 
+            - ""
   prefix: 
-    urw: <https://purl.archive.org/urwriters#> 
+    urw: <http://www.semanticweb.org/research-ontology#>
   prefixes: |
-    PREFIX urw: <https://purl.archive.org/urwriters#> 
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX prov: <http://www.w3.org/ns/prov#>
-    PREFIX urb: <https://purl.archive.org/urbooks#>
+    prefix frapo:  <http://purl.org/cerif/frapo/> 
+    prefix dul:    <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> 
+    prefix foaf:   <http://xmlns.com/foaf/0.1/> 
+    prefix fx:     <http://sparql.xyz/facade-x/ns/> 
+    prefix org:    <http://www.w3.org/ns/org#> 
+    prefix prov:   <http://www.w3.org/ns/prov#> 
+    prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> 
+    prefix reo:    <http://www.semanticweb.org/research-ontology/> 
+    prefix schema: <http://schema.org/> 
+    prefix skos:   <http://www.w3.org/2004/02/skos/core#> 
+    prefix soa:    <https://semopenalex.org/ontology/> 
+    prefix urb:    <http://purl.archive.org/urbooks#> 
+    prefix urw:    <http://purl.archive.org/urwriters#> 
+    PREFIX dcterms: <http://purl.org/dc/terms/>
+
   template: "{'QuestionFocus': '', 'entities': {'work': [],'person': [], 'subject':[], 'publisher':[]}}"
-  properties:
-    - prov:wasAttributedTo : wrote
-    - urw:wasPublishedBy : has publisher
-    - urw:publishingLanguage : publishing language
-    - urw:citizenship: citizen of
-    - urw:yearOfBirth: birth year
-    - urw:countryOfBirth: country of birth
-    - urw:authorTopic: has topic
-    - urb:workTopic: has topic
-    - urw:wasPublishedWhere: publishing place
-    - urw:wasPublishedWhen: publishing year
+  search: "rdfs:label"
+  arrow: "no"
