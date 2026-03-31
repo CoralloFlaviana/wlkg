@@ -139,16 +139,17 @@ def search_regex(
     #print("Bindings:", bindings)  # Debug: stampa i binding ottenuti
     
     for item in bindings:
-        print(f"[search_regex] ENTERED LOOP - Item keys: {item.keys()}")
+        
+        #print(f"[search_regex] ENTERED LOOP - Item keys: {item.keys()}")
         result_type = type_label
-        print(f"[search_regex] Processing item: {item} with initial type '{result_type}'")
+        #print(f"[search_regex] Processing item: {item} with initial type '{result_type}'")
         
         # Se entity_label era None, provo a estrarre il tipo dall'URL
         if entity_label is None :
             entity_url = item["s"].get("value", "")
             result_type = "altro"  # Default
 
-            print(f"[search_regex] Trying to determine type for entity URL: {entity_url}")
+            #print(f"[search_regex] Trying to determine type for entity URL: {entity_url}")
 
             result_type = query=typeEntity(entity_url)
 
@@ -160,11 +161,13 @@ def search_regex(
                 raise HTTPException(status_code=500, detail=f"SPARQL Query Error: {str(e)}")
 
             if not results["results"]["bindings"]:
-                print(f"[search_regex] No type found for entity URL: {entity_url}, defaulting to 'altro'")
+                #print(f"[search_regex] No type found for entity URL: {entity_url}, defaulting to 'altro'")
                 result_type = "altro"
             else: 
-                print({results["results"]["bindings"][0]["type"]["value"]})
-                type_value = results["results"]["bindings"][0]["type"]["value"] #todo: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DA CORREGGERE SOLO KFPO 
+                #print({results["results"]["bindings"][0]["type"]["value"]})
+                #type_value = results["results"]["bindings"][1]["type"]["value"] 
+                type_value = results["results"]["bindings"][0]["type"]["value"]
+                print(f"[search_regex] Found type URI: {type_value}")
                 result_type = uri_to_label(type_value)
         
         formatted_results.append({
@@ -174,38 +177,7 @@ def search_regex(
 
     return {"results": formatted_results}
 
-"""
-@query.get("/graphrag")
-def retrieve(text:str,type:str,k:int):
-    sparql = SPARQLWrapper(SPARQL_ENDPOINT)
-    template= eval(config.template)
-    my_res = []
-    result = retriever.extract_knowledge(template=template,text=text)
-    result = json.loads(result)
 
-    for res in result['entities'][type]:
-
-        linked = retriever.link(res,type,k)
-        
-    
-        my_res.extend(linked)
-
-    print(my_res)
-    query = finder_tmp(f"urw:{my_res[0][0]['entity']}")
-    
-    try:
-        sparql.setQuery(query)
-        sparql.setReturnFormat(JSON)
-        results = sparql.query().convert()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"SPARQL Query Error: {str(e)}")
-
-    # Trasforma la risposta per Pydantic
-    bindings = results["results"]["bindings"]
-    formatted_results = [{"sogg": item["sogg"], "s": item["p"]} for item in bindings]
-
-    return {"results": formatted_results}
-"""
 
 @query.get("/rel")
 def relTemp(ris: str) :
@@ -217,7 +189,7 @@ def relTemp(ris: str) :
         raise HTTPException(status_code=500, detail="Prefix is missing in configuration")
      
     ris="<"+ris+">"
-    print(ris)
+    #print(ris)
     query=rel(urw_prefix, ris)
     
     try:
@@ -237,7 +209,7 @@ def relTemp(ris: str) :
     for item in bindings
 ]
 
-    print(formatted_results)
+    #print(formatted_results)
 
     return {"results": formatted_results}
 
@@ -271,36 +243,48 @@ def entityFind(rel: str, o: str) -> FindResult:
         s_value = item["s"]
         sogg_raw = item.get("sogg")
 
+        #print(f"[entityFind] Processing item: {item} with raw sogg: {sogg_raw}")
+
         sogg_text = sogg_raw.get("value") if isinstance(sogg_raw, dict) else sogg_raw
         sogg_value = sogg_text or rel_to_label(str(s_value.get("value")))
 
 
+      
         try:
             if s_value["value"]:
                 entity_result = type_entity(s_value["value"])
                 print(entity_result)
+
+                entity_type = "altro"
+
                 if isinstance(entity_result, dict):
                     results_list = entity_result.get("results", [])
-                    if results_list:
-                        raw_type = results_list[0]
-                        uri_value = raw_type.get("type", {}).get("value") or raw_type.get("value") or "altro"
-                        entity_type = uri_to_label(uri_value)
-                    else:
-                        entity_type = "altro"
+
+                    for raw_type in results_list:
+                        uri_value = raw_type.get("type", {}).get("value") or raw_type.get("value")
+
+                        if uri_value:
+                            label = uri_to_label(uri_value)
+
+                            if label != "altro":
+                                entity_type = label
+                                break
                 else:
                     entity_type = str(entity_result)
+
             else:
                 entity_type = "altro"
+
         except Exception as e:
             entity_type = f"Error: {str(e)}"
 
         formatted_results.append({
             "s": s_value,
             "sogg": sogg_value,
-            "type": entity_type  
+            "type": entity_type
         })
-
-    print(formatted_results)
+        
+    #print(formatted_results)
     return {"results": formatted_results}
 
 
@@ -401,6 +385,8 @@ FUNZIONE UTILE:
 def uri_to_label(uri: str) -> str:
     if not uri or not isinstance(uri, str):
         return "altro"
+    
+    print(f"[uri_to_label] Received URI: {uri}")
 
     uri = rel_to_label(uri)  # Pulisce l'URI
     
@@ -410,8 +396,10 @@ def uri_to_label(uri: str) -> str:
             ns_url = getattr(ent_data, "type", "")
             ns_url = ns_url.split(":", 1)[-1].lower()
             ns_url = ns_url.strip("<>") #rimuove <> eventuali
-            uri = uri.split(":", 1)[-1].lower()  # Prende solo la parte dopo ':'  #todo: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DA CORREGGERE SOLO KFPO
+            #uri = uri.split(":", 1)[-1].lower()  # Prende solo la parte dopo ':'  
+            uri = uri.split(":", 0)[-1].lower() 
             label = getattr(ent_data, "label", "")
+            print(f"[uri_to_label] Comparing URI '{uri}' with namespace URL '{ns_url}' for label '{label}'")
             print(f"[uri_to_label] Checking against namespace '{ns_url}' with label '{label}'")
             
             if ns_url and (uri == ns_url):
@@ -420,6 +408,7 @@ def uri_to_label(uri: str) -> str:
 
     except Exception as e:
         print(f"[uri_to_label] Warning: unable to access config namespaces ({e})")
+        return "altro"
 
     return "altro"
 

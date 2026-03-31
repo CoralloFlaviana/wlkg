@@ -67,6 +67,7 @@ class Config(BaseSettings):
     template: str
     prefixes: str
     search: str
+    arrow: str
 
 
 # Models for Information Extraction

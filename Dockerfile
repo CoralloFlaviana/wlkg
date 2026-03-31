@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copia il codice
 COPY src ./src
 COPY data ./src/wlkg/data
-COPY config.yml ./config.yml
+#COPY config.yml ./config.yml
 
 
 

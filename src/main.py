@@ -62,6 +62,11 @@ async def root():
 
     return {"entities": entities}
 
+@app.get("/arrow")
+async def root():
+    print(f"Arrow value from config: {config.arrow}")
+    return {"arrow": config.arrow}
+
 
 if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -108,29 +108,44 @@ def searchTypeEntity(urw_prefix:str, entity_type:str) :
 
 #NOTE: trova le relazioni tra due entità
 def rel(urw_prefix:str, ris:str) :
-    query = f"""
-    {config.prefixes}
- 
-    
-    SELECT DISTINCT ?relazione ?rel WHERE {{
-        {{
-            {ris} ?rel ?o.
-            OPTIONAL {{ ?rel {config.search} ?relazione. }}
-        }}
-        UNION
-        {{
-            ?o ?rel {ris}.
-            OPTIONAL {{ ?rel {config.search} ?relazione. }}
-        }}
-    }}
+    if (config.arrow == "no"):
+      query = f"""
+      {config.prefixes}
+  
+      
+      SELECT DISTINCT ?relazione ?rel WHERE {{
+          {{
+              {ris} ?rel ?o.
+              OPTIONAL {{ ?rel {config.search} ?relazione. }}
+          }}
+          UNION
+          {{
+              ?o ?rel {ris}.
+              OPTIONAL {{ ?rel {config.search} ?relazione. }}
+          }}
+      }}
 
-    """
+      """
+    else:
+      query = f"""
+      {config.prefixes}
+  
+      
+      SELECT DISTINCT ?relazione ?rel WHERE {{
+          {{
+              {ris} ?rel ?o.
+              OPTIONAL {{ ?rel {config.search} ?relazione. }}
+          }}
+          
+      }}
+
+      """
     print(query)
     return query
 
 # NOTE: LATO FRONTEND serve per trovare l'entità legata da una relazione a o (entità visitata al momento)
 def explorationRel(urw_prefix:str, configEntity:str, o:str):
-
+  if (config.arrow == "no"):
     # Costruzione della query SPARQL con validazione
     query = f"""
     {config.prefixes}
@@ -149,8 +164,21 @@ def explorationRel(urw_prefix:str, configEntity:str, o:str):
 
     limit 50
     """
-    print(query)
-    return query
+  else:
+    # Costruzione della query SPARQL con validazione
+    query = f"""
+    {config.prefixes}
+
+    SELECT DISTINCT ?s ?sogg WHERE {{
+    
+      {o} {configEntity} ?s.
+      OPTIONAL {{?s {config.search} ?sogg.}}
+    }}
+    limit 50
+    """
+    
+  print(query)
+  return query
 
 
 def finder_tmp(o:str,prop:str=None):
@@ -201,10 +229,10 @@ def getImage(entity:str):
 
     # Costruzione della query SPARQL con validazione
     query = f"""
-    {config.prefixes}
+    {config.prefixes} 
     
     SELECT DISTINCT ?img WHERE {{
-      <{entity}> urw:image ?img.
+      <{entity}> foaf:image ?img.   
       
     }}
     """
